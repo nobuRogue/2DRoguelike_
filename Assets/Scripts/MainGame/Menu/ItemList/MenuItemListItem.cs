@@ -21,10 +21,13 @@ public class MenuItemListItem : MenuListItem {
 	[SerializeField]
 	private TextMeshProUGUI _itemNameText = null;
 
-	public void Setup(int itemID) {
-		var itemData = ItemUtility.GetItemData(itemID);
+	public int itemID { get; private set; } = -1;
+
+	public void Setup( int setItemID ) {
+		itemID = setItemID;
+		var itemData = ItemUtility.GetItemData( itemID );
 		// アイコン画像の設定
-		Sprite[] itemSpriteList = Resources.LoadAll<Sprite>(GameConst.ITEM_SPRITE_FILE_NAME);
+		Sprite[] itemSpriteList = Resources.LoadAll<Sprite>( GameConst.ITEM_SPRITE_FILE_NAME );
 		_itemIconImage.sprite = itemSpriteList[(int)itemData.GetCategory()];
 		// アイテム名の設定
 		_itemNameText.text = itemData.GetItemName();

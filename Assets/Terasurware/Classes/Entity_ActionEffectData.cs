@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class Entity_ItemData : ScriptableObject
+public class Entity_ActionEffectData : ScriptableObject
 {	
 	public List<Sheet> sheets = new List<Sheet> ();
 
@@ -18,9 +18,8 @@ public class Entity_ItemData : ScriptableObject
 	{
 		
 		public int ID;
-		public int nameID;
-		public int category;
-		public int actionID;
+		public int effectType;
+		public int[] param;
 	}
 }
 

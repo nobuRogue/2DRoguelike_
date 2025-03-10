@@ -23,13 +23,13 @@ MonoBehaviour:
       - 
     - ID: 1
       Message:
-      - 
+      - "HP\u304C{0}\u56DE\u5FA9\u3057\u305F"
       - 
       - 
       - 
     - ID: 2
       Message:
-      - 
+      - "\u6E80\u8179\u5EA6\u304C{0}\u56DE\u5FA9\u3057\u305F"
       - 
       - 
       - 

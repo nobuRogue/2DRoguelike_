@@ -18,7 +18,7 @@ public class Entity_ActionData : ScriptableObject
 	{
 		
 		public int ID;
-		public int effectType;
+		public int effectID;
 		public int rangeType;
 	}
 }

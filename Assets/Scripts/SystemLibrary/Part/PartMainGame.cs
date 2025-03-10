@@ -26,7 +26,7 @@ public class PartMainGame : PartBase {
 
 	public override async UniTask Initialize() {
 		TerrainSpriteAssignor.Initialize();
-		TerrainSpriteAssignor.SetFloorSpriteTypeIndex(0);
+		TerrainSpriteAssignor.SetFloorSpriteTypeIndex( 0 );
 
 		_dungeonProcessor = new DungeonProcessor();
 		_dungeonProcessor.Initialize();
@@ -35,9 +35,10 @@ public class PartMainGame : PartBase {
 		_characterManager.Initialize();
 		_itemManager.Initialize();
 
-		await MenuManager.instance.Get<MenuPlayerStatus>("Prefabs/Menu/CanvasPlayerStatus").Initialize();
-		await MenuManager.instance.Get<MenuGameOver>("Prefabs/Menu/CanvasGameOver").Initialize();
-		await MenuManager.instance.Get<MenuRogueLog>("Prefabs/Menu/CanvasRogueLog").Initialize();
+		await MenuManager.instance.Get<MenuPlayerStatus>( "Prefabs/Menu/CanvasPlayerStatus" ).Initialize();
+		await MenuManager.instance.Get<MenuGameOver>( "Prefabs/Menu/CanvasGameOver" ).Initialize();
+		await MenuManager.instance.Get<MenuRogueLog>( "Prefabs/Menu/CanvasRogueLog" ).Initialize();
+		await MenuManager.instance.Get<MenuItemList>( "Prefabs/Menu/CanvasItemList" ).Initialize();
 
 		ActionRangeManager.Initialize();
 		ActionManager.Initialize();
@@ -45,7 +46,7 @@ public class PartMainGame : PartBase {
 
 	public override async UniTask Setup() {
 		// 階層数を1に設定
-		UserDataHolder.currentData.SetFloorCount(1);
+		UserDataHolder.currentData.SetFloorCount( 1 );
 		// プレイヤーが居なければ生成
 		SetupPlayer();
 		await UniTask.CompletedTask;
@@ -53,7 +54,7 @@ public class PartMainGame : PartBase {
 
 	public override async UniTask Execute() {
 		// BGM再生
-		SoundManager.instance.PlayBGM(_MAIN_BGM_ID);
+		SoundManager.instance.PlayBGM( _MAIN_BGM_ID );
 		// メインUI表示
 		var menuPlayerStatus = MenuManager.instance.Get<MenuPlayerStatus>();
 		await menuPlayerStatus.Open();
@@ -72,16 +73,16 @@ public class PartMainGame : PartBase {
 		UniTask task;
 		switch (endReason) {
 			case eDungeonEndReason.Dead:
-			MenuGameOver menuGameOver = MenuManager.instance.Get<MenuGameOver>();
-			await menuGameOver.Open();
-			await menuGameOver.Close();
-			// タイトルへ戻る
-			task = PartManager.instance.TransitionPart(eGamePart.Title);
-			break;
+				MenuGameOver menuGameOver = MenuManager.instance.Get<MenuGameOver>();
+				await menuGameOver.Open();
+				await menuGameOver.Close();
+				// タイトルへ戻る
+				task = PartManager.instance.TransitionPart( eGamePart.Title );
+				break;
 			case eDungeonEndReason.Clear:
-			// エンディングパートへ移行
-			task = PartManager.instance.TransitionPart(eGamePart.Ending);
-			break;
+				// エンディングパートへ移行
+				task = PartManager.instance.TransitionPart( eGamePart.Ending );
+				break;
 		}
 
 	}
@@ -90,8 +91,8 @@ public class PartMainGame : PartBase {
 		PlayerCharacter player = CharacterManager.instance.GetPlayer();
 		if (player == null) {
 			// プレイヤーの生成
-			CharacterManager.instance.UsePlayer(MapSquareManager.instance.Get(0, 0), 0);
-			CharacterManager.instance.GetPlayer().SetMoveObserver(CameraManager.instance);
+			CharacterManager.instance.UsePlayer( MapSquareManager.instance.Get( 0, 0 ), 0 );
+			CharacterManager.instance.GetPlayer().SetMoveObserver( CameraManager.instance );
 		} else {
 			// プレイヤーの初期化
 			player.ResetStatus();

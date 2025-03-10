@@ -11,11 +11,11 @@ using System;
 public abstract class ActionEffectBase {
 	protected static Action<eDungeonEndReason> _EndDungeon = null;
 
-	public static void SetEndCallback(Action<eDungeonEndReason> setDungeonProcess) {
+	public static void SetEndCallback( Action<eDungeonEndReason> setDungeonProcess ) {
 		_EndDungeon = setDungeonProcess;
 	}
 
-	public abstract UniTask Execute(CharacterBase sourceCharacter, ActionRangeBase range);
+	public abstract UniTask Execute( CharacterBase sourceCharacter, Entity_ActionEffectData.Param effectMaster, ActionRangeBase range );
 
 	public virtual void TearDown() {
 

@@ -7,10 +7,10 @@ using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
 using NPOI.SS.UserModel;
 
-public class ActionData_importer : AssetPostprocessor {
-	private static readonly string filePath = "Assets/Resources/MasterData/ActionData.xlsx";
-	private static readonly string exportPath = "Assets/Resources/MasterData/ActionData.asset";
-	private static readonly string[] sheetNames = { "ActionData", };
+public class ActionEffectData_importer : AssetPostprocessor {
+	private static readonly string filePath = "Assets/Resources/MasterData/ActionEffectData.xlsx";
+	private static readonly string exportPath = "Assets/Resources/MasterData/ActionEffectData.asset";
+	private static readonly string[] sheetNames = { "ActionEffectData", };
 	
 	static void OnPostprocessAllAssets (string[] importedAssets, string[] deletedAssets, string[] movedAssets, string[] movedFromAssetPaths)
 	{
@@ -18,9 +18,9 @@ public class ActionData_importer : AssetPostprocessor {
 			if (!filePath.Equals (asset))
 				continue;
 				
-			Entity_ActionData data = (Entity_ActionData)AssetDatabase.LoadAssetAtPath (exportPath, typeof(Entity_ActionData));
+			Entity_ActionEffectData data = (Entity_ActionEffectData)AssetDatabase.LoadAssetAtPath (exportPath, typeof(Entity_ActionEffectData));
 			if (data == null) {
-				data = ScriptableObject.CreateInstance<Entity_ActionData> ();
+				data = ScriptableObject.CreateInstance<Entity_ActionEffectData> ();
 				AssetDatabase.CreateAsset ((ScriptableObject)data, exportPath);
 				data.hideFlags = HideFlags.NotEditable;
 			}
@@ -41,18 +41,20 @@ public class ActionData_importer : AssetPostprocessor {
 						continue;
 					}
 
-					Entity_ActionData.Sheet s = new Entity_ActionData.Sheet ();
+					Entity_ActionEffectData.Sheet s = new Entity_ActionEffectData.Sheet ();
 					s.name = sheetName;
 				
 					for (int i=1; i<= sheet.LastRowNum; i++) {
 						IRow row = sheet.GetRow (i);
 						ICell cell = null;
 						
-						Entity_ActionData.Param p = new Entity_ActionData.Param ();
+						Entity_ActionEffectData.Param p = new Entity_ActionEffectData.Param ();
 						
 					cell = row.GetCell(0); p.ID = (int)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(2); p.effectID = (int)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(3); p.rangeType = (int)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(2); p.effectType = (int)(cell == null ? 0 : cell.NumericCellValue);
+					p.param = new int[2];
+					cell = row.GetCell(4); p.param[0] = (int)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(6); p.param[1] = (int)(cell == null ? 0 : cell.NumericCellValue);
 						s.list.Add (p);
 					}
 					data.sheets.Add(s);

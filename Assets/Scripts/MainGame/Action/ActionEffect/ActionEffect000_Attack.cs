@@ -15,44 +15,46 @@ public class ActionEffect000_Attack : ActionEffectBase {
 
 	private const int _ATTACK_HIT_SE_ID = 0;
 
-	public override async UniTask Execute(CharacterBase sourceCharacter, ActionRangeBase range) {
+	public override async UniTask Execute( CharacterBase sourceCharacter, Entity_ActionEffectData.Param effectMaster, ActionRangeBase range ) {
 		// 行動者の攻撃アニメーション再生
-		sourceCharacter.SetAnimation(eCharacterAnimation.Attack);
+		sourceCharacter.SetAnimation( eCharacterAnimation.Attack );
 		int sourceAttack = sourceCharacter.attack;
 		List<int> targetList = range.targetList;
 		int targetCount = targetList.Count;
-		List<UniTask> taskList = new List<UniTask>(targetCount);
+		List<UniTask> taskList = new List<UniTask>( targetCount );
 		// 対象ごとに攻撃の処理
 		for (int i = 0; i < targetCount; i++) {
-			CharacterBase target = CharacterManager.instance.Get(targetList[i]);
+			CharacterBase target = CharacterManager.instance.Get( targetList[i] );
 			if (target == null) continue;
 
-			UniTask task = SoundManager.instance.PlaySE(_ATTACK_HIT_SE_ID);
-			taskList.Add(ExecuteAttack(sourceAttack, target));
+			UniTask task = SoundManager.instance.PlaySE( _ATTACK_HIT_SE_ID );
+			taskList.Add( ExecuteAttack( sourceAttack, target, effectMaster.param[0] ) );
 		}
 		// 攻撃アニメーションの終了待ち
-		while (sourceCharacter.GetCurrentAnimation() == eCharacterAnimation.Attack) await UniTask.DelayFrame(1);
+		while (sourceCharacter.GetCurrentAnimation() == eCharacterAnimation.Attack) await UniTask.DelayFrame( 1 );
 
-		await WaitTask(taskList);
+		await WaitTask( taskList );
 	}
 
-	private async UniTask ExecuteAttack(int sourceAttack, CharacterBase targetCharacter) {
+	private async UniTask ExecuteAttack( int sourceAttack, CharacterBase targetCharacter, int ratio ) {
 		// 対象の被ダメージアニメーション
-		targetCharacter.SetAnimation(eCharacterAnimation.Damage);
+		targetCharacter.SetAnimation( eCharacterAnimation.Damage );
 		// ダメージ計算
 		int defense = targetCharacter.defense;
-		int damage = (int)(sourceAttack * Mathf.Pow(15.0f / 16.0f, defense));
+		int damage = (int)(sourceAttack * Mathf.Pow( 15.0f / 16.0f, defense ));
+		damage *= ratio;
+		damage /= 100;
 		// ログ表示
-		MenuRogueLog.instance.AddLog(string.Format(0.ToMessage(), damage));
+		MenuRogueLog.instance.AddLog( string.Format( 0.ToMessage(), damage ) );
 		// HPを減らす
-		targetCharacter.RemoveHP(damage);
+		targetCharacter.RemoveHP( damage );
 		// アニメーションの終了待ち
-		while (targetCharacter.GetCurrentAnimation() == eCharacterAnimation.Damage) await UniTask.DelayFrame(1);
+		while (targetCharacter.GetCurrentAnimation() == eCharacterAnimation.Damage) await UniTask.DelayFrame( 1 );
 
 		// 死亡判定、処理
 		if (!targetCharacter.IsDead()) return;
 
-		await CharacterUtility.DeadCharacter(targetCharacter);
+		await CharacterUtility.DeadCharacter( targetCharacter );
 	}
 
 }

@@ -5,10 +5,8 @@
  * @date 2025/3/6
  */
 
-using Cysharp.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 using static CommonModule;
 
@@ -20,7 +18,7 @@ public class MenuItemList : MenuList {
 		var itemListFormat = new MenuListCallbackFortmat();
 		itemListFormat.OnDecide = CloseItemList;
 		itemListFormat.OnCancel = CloseItemList;
-		SetCallbackFortmat(itemListFormat);
+		SetCallbackFortmat( itemListFormat );
 	}
 
 	/// <summary>
@@ -28,7 +26,7 @@ public class MenuItemList : MenuList {
 	/// </summary>
 	/// <param name="currentItem"></param>
 	/// <returns></returns>
-	private async UniTask<bool> CloseItemList(MenuListItem currentItem) {
+	private async UniTask<bool> CloseItemList( MenuListItem currentItem ) {
 		await UniTask.CompletedTask;
 		return false;
 	}
@@ -38,21 +36,23 @@ public class MenuItemList : MenuList {
 	/// </summary>
 	/// <param name="itemList"></param>
 	/// <returns></returns>
-	public async UniTask Setup(int[] itemList) {
-		await SetIndex(-1);
+	public async UniTask Setup( List<int> itemList, MenuListCallbackFortmat callbackFormat ) {
+		SetCallbackFortmat( callbackFormat );
+
+		await SetIndex( -1 );
 		RemoveAllItem();
-		if (IsEmpty(itemList)) return;
+		if (IsEmpty( itemList )) return;
 		// çÄñ⁄ÇÃê∂ê¨
 		bool existItem = false;
-		for (int i = 0, max = itemList.Length; i < max; i++) {
+		for (int i = 0, max = itemList.Count; i < max; i++) {
 			if (itemList[i] < 0) break;
 			// çÄñ⁄óLñ≥ÇÃîªíË
 			if (!existItem) existItem = true;
 			// çÄñ⁄ÇÃê∂ê¨
 			var addItem = AddListItem() as MenuItemListItem;
-			addItem.Setup(itemList[i]);
+			addItem.Setup( itemList[i] );
 		}
-		if (existItem) await SetIndex(0);
+		if (existItem) await SetIndex( 0 );
 
 	}
 

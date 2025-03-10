@@ -6,9 +6,7 @@
  */
 
 using Cysharp.Threading.Tasks;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 using static CommonModule;
 
@@ -17,7 +15,9 @@ public class ActionManager {
 
 	public static void Initialize() {
 		_actionEffectList = new List<ActionEffectBase>();
-		_actionEffectList.Add(new ActionEffect000_Attack());
+		_actionEffectList.Add( new ActionEffect000_Attack() );
+		_actionEffectList.Add( new ActionEffect001_RecoveryHP() );
+		_actionEffectList.Add( new ActionEffect002_RecoveryStamina() );
 	}
 
 	/// <summary>
@@ -26,29 +26,32 @@ public class ActionManager {
 	/// <param name="sourceCharacter"></param>
 	/// <param name="actionID"></param>
 	/// <returns></returns>
-	public static async UniTask ExecuteAction(CharacterBase sourceCharacter, int actionID) {
-		Entity_ActionData.Param actionMaster = ActionMasterUtility.GetActionMaster(actionID);
+	public static async UniTask ExecuteAction( CharacterBase sourceCharacter, int actionID ) {
+		Entity_ActionData.Param actionMaster = ActionMasterUtility.GetActionMaster( actionID );
 		if (actionMaster == null) return;
 
-		ActionRangeBase range = ActionRangeManager.GetRange(actionMaster.rangeType);
+		ActionRangeBase range = ActionRangeManager.GetRange( actionMaster.rangeType );
 		if (range == null) return;
 
-		range.Setup(sourceCharacter);
-		await ExecuteActionEffect(actionMaster.effectType, sourceCharacter, range);
+		range.Setup( sourceCharacter );
+		await ExecuteActionEffect( actionMaster.effectID, sourceCharacter, range );
 	}
 
 	/// <summary>
 	/// アクション効果実行
 	/// </summary>
-	/// <param name="effectType"></param>
+	/// <param name="effectID"></param>
 	/// <param name="sourceCharacter"></param>
 	/// <param name="range"></param>
 	/// <returns></returns>
-	private static async UniTask ExecuteActionEffect(int effectType, CharacterBase sourceCharacter, ActionRangeBase range) {
-		if (!IsEnableIndex(_actionEffectList, effectType)) return;
+	private static async UniTask ExecuteActionEffect( int effectID, CharacterBase sourceCharacter, ActionRangeBase range ) {
+		Entity_ActionEffectData.Param effectMaster = ActionMasterUtility.GetActionEffectMaster( effectID );
+		if (effectMaster == null) return;
 
-		await _actionEffectList[effectType].Execute(sourceCharacter, range);
-		_actionEffectList[effectType].TearDown();
+		if (!IsEnableIndex( _actionEffectList, effectID )) return;
+
+		await _actionEffectList[effectID].Execute( sourceCharacter, effectMaster, range );
+		_actionEffectList[effectID].TearDown();
 	}
 
 }

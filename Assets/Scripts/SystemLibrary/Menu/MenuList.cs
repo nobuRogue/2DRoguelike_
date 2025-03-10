@@ -30,18 +30,18 @@ public class MenuList : MenuBase {
 	/// <summary>
 	/// リストメニューのコールバック集クラス
 	/// </summary>
-	protected class MenuListCallbackFortmat {
+	public class MenuListCallbackFortmat {
 		// 決定された際の処理
 		public System.Func<MenuListItem, UniTask<bool>> OnDecide = null;
 		// キャンセルされた際の処理
 		public System.Func<MenuListItem, UniTask<bool>> OnCancel = null;
 		// カーソルが移動した際の処理
 		public System.Func<MenuListItem, MenuListItem, UniTask<bool>> OnMoveCursor = null;
+		public System.Func<MenuListItem, UniTask<bool>> OnAfterAccept = null;
 	}
 	private MenuListCallbackFortmat _currentFormat = null;
 
 	private int _currentIndex = -1;
-	private bool _isContinue = false;
 
 	private List<MenuListItem> _useList = null;
 	private List<MenuListItem> _unuseList = null;
@@ -56,7 +56,7 @@ public class MenuList : MenuBase {
 	/// コールバック用クラスの設定
 	/// </summary>
 	/// <param name="setFormat"></param>
-	protected void SetCallbackFortmat(MenuListCallbackFortmat setFormat) {
+	protected void SetCallbackFortmat( MenuListCallbackFortmat setFormat ) {
 		_currentFormat = setFormat;
 	}
 
@@ -66,17 +66,17 @@ public class MenuList : MenuBase {
 	/// <returns></returns>
 	protected MenuListItem AddListItem() {
 		MenuListItem addItem;
-		if (IsEmpty(_unuseList)) {
+		if (IsEmpty( _unuseList )) {
 			// 未使用リストが空なので生成
-			addItem = Instantiate(_itemOrigin, _contentRoot);
+			addItem = Instantiate( _itemOrigin, _contentRoot );
 		} else {
 			// 未使用リストから取得
 			addItem = _unuseList[0];
-			_unuseList.RemoveAt(0);
-			addItem.transform.SetParent(_contentRoot);
+			_unuseList.RemoveAt( 0 );
+			addItem.transform.SetParent( _contentRoot );
 		}
 		addItem.Deselect();
-		_useList.Add(addItem);
+		_useList.Add( addItem );
 		return addItem;
 	}
 
@@ -84,14 +84,14 @@ public class MenuList : MenuBase {
 	/// インデクス指定のリスト項目削除
 	/// </summary>
 	/// <param name="itemIndex"></param>
-	protected void RemoveListItem(int itemIndex) {
-		if (!IsEnableIndex(_useList, itemIndex)) return;
+	protected void RemoveListItem( int itemIndex ) {
+		if (!IsEnableIndex( _useList, itemIndex )) return;
 		// 使用リストから取り除く
 		MenuListItem removeItem = _useList[itemIndex];
-		_useList.RemoveAt(itemIndex);
+		_useList.RemoveAt( itemIndex );
 		// 未使用リストへ追加
-		_unuseList.Add(removeItem);
-		removeItem.transform.SetParent(_unuseRoot);
+		_unuseList.Add( removeItem );
+		removeItem.transform.SetParent( _unuseRoot );
 		removeItem.Deselect();
 	}
 
@@ -99,7 +99,7 @@ public class MenuList : MenuBase {
 	/// 全てのリスト項目削除
 	/// </summary>
 	protected void RemoveAllItem() {
-		while (!IsEmpty(_useList)) RemoveListItem(0);
+		while (!IsEmpty( _useList )) RemoveListItem( 0 );
 
 	}
 
@@ -108,19 +108,17 @@ public class MenuList : MenuBase {
 	/// </summary>
 	/// <returns></returns>
 	public async UniTask AcceptInput() {
-		_isContinue = true;
-		while (_isContinue) {
+		while (true) {
 			// カーソルの移動受付
-			await AcceptMoveCursor();
-			if (!_isContinue) break;
+			if (await AcceptMoveCursor()) break;
 			// 決定の入力受付
-			await AcceptDecide();
-			if (!_isContinue) break;
+			if (await AcceptDecide()) break;
 			// キャンセルの入力受付
-			await AcceptCancel();
-			if (!_isContinue) break;
+			if (await AcceptCancel()) break;
+			// 自由受付
+			if (await AcceptFree()) break;
 
-			await UniTask.DelayFrame(1);
+			await UniTask.DelayFrame( 1 );
 		}
 	}
 
@@ -128,30 +126,30 @@ public class MenuList : MenuBase {
 	/// カーソル移動入力の受付処理
 	/// </summary>
 	/// <returns></returns>
-	private async UniTask AcceptMoveCursor() {
+	private async UniTask<bool> AcceptMoveCursor() {
 		// 四方向の入力受付
 		eDirectionFour inputDir = GetDirInput();
-		if (inputDir == eDirectionFour.Invalid) return;
+		if (inputDir == eDirectionFour.Invalid) return false;
 		// 入力に応じたインデクスの変更
 		int moveIndex = _currentIndex;
 		switch (inputDir) {
 			case eDirectionFour.Up:
-			moveIndex--;
-			break;
+				moveIndex--;
+				break;
 			case eDirectionFour.Right:
-			break;
+				break;
 			case eDirectionFour.Down:
-			moveIndex++;
-			break;
+				moveIndex++;
+				break;
 			case eDirectionFour.Left:
-			break;
+				break;
 		}
 		// 移動後のインデクスがリスト項目数に収まるように修正
 		if (moveIndex >= _useList.Count) moveIndex -= _useList.Count;
 
 		if (moveIndex < 0) moveIndex += _useList.Count;
 		// カーソル移動時の処理
-		await SetIndex(moveIndex);
+		return await SetIndex( moveIndex );
 	}
 
 	/// <summary>
@@ -159,13 +157,13 @@ public class MenuList : MenuBase {
 	/// </summary>
 	/// <returns></returns>
 	private eDirectionFour GetDirInput() {
-		if (Input.GetKeyDown(KeyCode.UpArrow)) {
+		if (Input.GetKeyDown( KeyCode.UpArrow )) {
 			return eDirectionFour.Up;
-		} else if (Input.GetKeyDown(KeyCode.RightArrow)) {
+		} else if (Input.GetKeyDown( KeyCode.RightArrow )) {
 			return eDirectionFour.Right;
-		} else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+		} else if (Input.GetKeyDown( KeyCode.DownArrow )) {
 			return eDirectionFour.Down;
-		} else if (Input.GetKeyDown(KeyCode.LeftArrow)) {
+		} else if (Input.GetKeyDown( KeyCode.LeftArrow )) {
 			return eDirectionFour.Left;
 		}
 		return eDirectionFour.Invalid;
@@ -176,54 +174,66 @@ public class MenuList : MenuBase {
 	/// </summary>
 	/// <param name="setIndex"></param>
 	/// <returns></returns>
-	protected async UniTask SetIndex(int setIndex) {
-		if (_currentIndex == setIndex) return;
+	protected async UniTask<bool> SetIndex( int setIndex ) {
+		if (_currentIndex == setIndex) return false;
 		// 現在の項目を未選択状態にする
 		MenuListItem prevItem;
-		if (IsEnableIndex(_useList, _currentIndex)) {
+		if (IsEnableIndex( _useList, _currentIndex )) {
 			prevItem = _useList[_currentIndex];
 			prevItem.Deselect();
 		} else {
 			prevItem = null;
 		}
 		_currentIndex = setIndex;
-		if (!IsEnableIndex(_useList, _currentIndex)) return;
+		if (!IsEnableIndex( _useList, _currentIndex )) return false;
 		// 移動後の項目を選択状態にする
 		MenuListItem currentItem = _useList[_currentIndex];
 		currentItem.Select();
 		// カーソル移動コールバックの実行
 		if (_currentFormat == null ||
-			_currentFormat.OnMoveCursor == null) return;
+			_currentFormat.OnMoveCursor == null) return false;
 
-		_isContinue = await _currentFormat.OnMoveCursor(currentItem, prevItem);
+		return await _currentFormat.OnMoveCursor( currentItem, prevItem );
 	}
 
 	/// <summary>
 	/// 決定入力の受付処理
 	/// </summary>
 	/// <returns></returns>
-	private async UniTask AcceptDecide() {
-		if (!Input.GetKeyDown(KeyCode.Z)) return;
+	private async UniTask<bool> AcceptDecide() {
+		if (!Input.GetKeyDown( KeyCode.Z )) return false;
 
 		if (_currentFormat == null ||
-			_currentFormat.OnDecide == null) return;
+			_currentFormat.OnDecide == null) return false;
 
-		MenuListItem currentItem = IsEnableIndex(_useList, _currentIndex) ? _useList[_currentIndex] : null;
-		_isContinue = await _currentFormat.OnDecide(currentItem);
+		MenuListItem currentItem = IsEnableIndex( _useList, _currentIndex ) ? _useList[_currentIndex] : null;
+		return await _currentFormat.OnDecide( currentItem );
 	}
 
 	/// <summary>
 	/// キャンセル入力の受付処理
 	/// </summary>
 	/// <returns></returns>
-	private async UniTask AcceptCancel() {
-		if (!Input.GetKeyDown(KeyCode.X)) return;
+	private async UniTask<bool> AcceptCancel() {
+		if (!Input.GetKeyDown( KeyCode.X )) return false;
 
 		if (_currentFormat == null ||
-			_currentFormat.OnCancel == null) return;
+			_currentFormat.OnCancel == null) return false;
 
-		MenuListItem currentItem = IsEnableIndex(_useList, _currentIndex) ? _useList[_currentIndex] : null;
-		_isContinue = await _currentFormat.OnCancel(currentItem);
+		MenuListItem currentItem = IsEnableIndex( _useList, _currentIndex ) ? _useList[_currentIndex] : null;
+		return await _currentFormat.OnCancel( currentItem );
+	}
+
+	/// <summary>
+	/// キャンセル入力の受付処理
+	/// </summary>
+	/// <returns></returns>
+	private async UniTask<bool> AcceptFree() {
+		if (_currentFormat == null ||
+			_currentFormat.OnAfterAccept == null) return false;
+
+		MenuListItem currentItem = IsEnableIndex( _useList, _currentIndex ) ? _useList[_currentIndex] : null;
+		return await _currentFormat.OnAfterAccept( currentItem );
 	}
 
 }

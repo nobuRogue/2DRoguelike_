@@ -26,7 +26,7 @@ public class TurnProcessor {
 		System.Action<eFloorEndReason> SetEndFloor,
 		System.Action<eDungeonEndReason> SetEndDungeon) {
 		_acceptPlayerInput = new AcceptPlayerInput();
-		_acceptPlayerInput.SetAddMoveActionCallback(moveAction => _moveActionList.Add(moveAction));
+		_acceptPlayerInput.Initialize(moveAction => _moveActionList.Add(moveAction));
 		EnemyAIBase.SetAddMoveCallback(moveAction => _moveActionList.Add(moveAction));
 
 		_moveActionList = new List<MoveAction>(FLOOR_ENEMY_MAX + 1);

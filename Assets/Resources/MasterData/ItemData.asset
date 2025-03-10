@@ -18,44 +18,44 @@ MonoBehaviour:
     - ID: 0
       nameID: 2000
       category: 0
-      effectID: 0
+      actionID: 1
     - ID: 1
       nameID: 2001
       category: 1
-      effectID: 0
+      actionID: 2
     - ID: 2
       nameID: 2002
       category: 2
-      effectID: 0
+      actionID: 1
     - ID: 3
       nameID: 2003
       category: 0
-      effectID: 0
+      actionID: 0
     - ID: 4
       nameID: 2004
       category: 0
-      effectID: 0
+      actionID: 0
     - ID: 5
       nameID: 2005
       category: 0
-      effectID: 0
+      actionID: 0
     - ID: 6
       nameID: 2006
       category: 0
-      effectID: 0
+      actionID: 0
     - ID: 7
       nameID: 2007
       category: 0
-      effectID: 0
+      actionID: 0
     - ID: 8
       nameID: 2008
       category: 0
-      effectID: 0
+      actionID: 0
     - ID: 9
       nameID: 2009
       category: 0
-      effectID: 0
+      actionID: 0
     - ID: 10
       nameID: 2010
       category: 0
-      effectID: 0
+      actionID: 0

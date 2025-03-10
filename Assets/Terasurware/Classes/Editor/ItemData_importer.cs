@@ -53,7 +53,7 @@ public class ItemData_importer : AssetPostprocessor {
 					cell = row.GetCell(0); p.ID = (int)(cell == null ? 0 : cell.NumericCellValue);
 					cell = row.GetCell(1); p.nameID = (int)(cell == null ? 0 : cell.NumericCellValue);
 					cell = row.GetCell(2); p.category = (int)(cell == null ? 0 : cell.NumericCellValue);
-					cell = row.GetCell(4); p.effectID = (int)(cell == null ? 0 : cell.NumericCellValue);
+					cell = row.GetCell(4); p.actionID = (int)(cell == null ? 0 : cell.NumericCellValue);
 						s.list.Add (p);
 					}
 					data.sheets.Add(s);

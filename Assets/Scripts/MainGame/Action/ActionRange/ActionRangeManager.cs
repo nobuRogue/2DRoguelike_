@@ -16,7 +16,8 @@ public class ActionRangeManager {
 
 	public static void Initialize() {
 		_actionRangeList = new List<ActionRangeBase>();
-		_actionRangeList.Add(new ActionRange00_DirForward());
+		_actionRangeList.Add( new ActionRange00_DirForward() );
+		_actionRangeList.Add( new ActionRange01_Self() );
 	}
 
 	/// <summary>
@@ -24,8 +25,8 @@ public class ActionRangeManager {
 	/// </summary>
 	/// <param name="rangeType"></param>
 	/// <returns></returns>
-	public static ActionRangeBase GetRange(int rangeType) {
-		if (!IsEnableIndex(_actionRangeList, rangeType)) return null;
+	public static ActionRangeBase GetRange( int rangeType ) {
+		if (!IsEnableIndex( _actionRangeList, rangeType )) return null;
 
 		return _actionRangeList[rangeType];
 	}
