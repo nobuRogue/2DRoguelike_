@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 8
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e44a580829884944a56de1498869764, type: 3}
+  m_Name: MessageData
+  m_EditorClassIdentifier: 
+  sheets:
+  - name: MessageData
+    list:
+    - ID: 0
+      Message:
+      - "{0}\u30C0\u30E1\u30FC\u30B8"
+      - '{0} damage'
+      - "{0}\u635F\u4F24"
+      - 
+    - ID: 1
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 2
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 3
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 4
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 5
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 6
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 7
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 8
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 9
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 10
+      Message:
+      - 
+      - 
+      - 
+      - 
+    - ID: 1000
+      Message:
+      - "{0}\u3092\u62FE\u3048\u306A\u304B\u3063\u305F"
+      - 
+      - 
+      - 
+    - ID: 1001
+      Message:
+      - "{0}\u3092\u62FE\u3063\u305F"
+      - 
+      - 
+      - 
+    - ID: 2000
+      Message:
+      - "\u30DD\u30FC\u30B7\u30E7\u30F3A"
+      - 
+      - 
+      - 
+    - ID: 2001
+      Message:
+      - "\u98DF\u3079\u7269B"
+      - 
+      - 
+      - 
+    - ID: 2002
+      Message:
+      - "\u6756C"
+      - 
+      - 
+      - 
